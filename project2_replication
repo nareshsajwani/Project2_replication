@@ -1,0 +1,29 @@
+Replication
+Premise 1
+MongoDB releases a new version. How do we upgrade our production systems with minimal downtime?
+
+Ans :: Steps should be as:: 
+1)  Shut Down db
+2) Backup db 
+3) Replace existing binary with new version binary
+4) Start Mongod 
+5) take backup again 
+
+Premise 2
+We have a new set of queries we want to run against the production system. But whenever we try to build the indexes for these queries, we experience a massive slowdown. How can we build indexes on
+the production system while minimizing the performance penalty? You will build indexes on the test.users collection for the fields emailAddress and userId.
+
+Ans ::We can overcome this bottleneck of performance in replicset by following steps.
+0) Make sure having enough space on replicaset. 
+1) Shut Down secondary 
+2) Start secondary with new port number and remove parameter replset from config file
+3) Create index on newly started port on steps-2
+4) Once index created, shutdown instance and start back with old port and replset. 
+5) Now stepDown primary and start secondry  as new primary .
+6) If required stepdown again . and make old primary again a primary . 
+
+Premise 3
+Your primary has become unavailable because of a power surge. Fortunately, automatic failover kicked in and the system never went down. Unfortunately, you never set alerts to inform you when a node
+becomes unavailable, so weeks go by until you notice. When you bring it back up, the node does not restart cleanly. Find out why and fix it.
+Ans:: if oplog is recycled . it became not possible to resync secondary with primary . In this case we have to rebuild replicaset again . 
+
